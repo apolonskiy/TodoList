@@ -1,2 +1,1 @@
-const dbClient = require('../../db-client-utils/db-client');
-
+import { client as dbClient } from '../../db-client-utils/db-client';

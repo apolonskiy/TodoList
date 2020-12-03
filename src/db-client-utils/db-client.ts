@@ -1,12 +1,10 @@
-const {Client} = require('pg');
+import { Client } from 'pg';
 
-const client = new Client({
+export const client = new Client({
   user: 'apolonskyi',
   host: 'localhost',
   database: 'todo-list',
   password: 'Passw0rd!',
-  port: 5454,
+  port: 5454
 });
 client.connect();
-
-module.exports = client;

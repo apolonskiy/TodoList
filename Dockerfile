@@ -1,0 +1,6 @@
+FROM postgres:11.1-alpine
+ENV SEED $SEED
+ENV POSTGRES_USER=apolonskyi
+ENV POSTGRES_PASSWORD=Passw0rd!
+ENV POSTGRES_DB=todo-list
+EXPOSE 5454

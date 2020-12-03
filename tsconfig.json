@@ -17,11 +17,5 @@
   "include": [
     "src/**/*",
     "typings/**/*"
-  ],
-  "baseUrl": ".",
-  "paths": {
-    "*": [
-      "typings/*.d.ts"
-    ]
-  }
+  ]
 }

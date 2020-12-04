@@ -2,6 +2,7 @@ version: 2.1
 jobs:
   build:
     docker: 
+      - image: postgres:11.1
       - image: node:12.13.1
     steps:
       - checkout
@@ -9,6 +10,3 @@ jobs:
       - run: './postgres-db.sh'
       - run: 'npm i'
       - run: 'npm start'
-
-
-

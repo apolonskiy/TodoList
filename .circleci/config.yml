@@ -16,7 +16,8 @@ jobs:
       
     steps:
       - checkout
-      - run: './postgres-db.sh'
+#       - run: './postgres-db.sh'
+      - run: npm install -g ts-node
       - run: 'npm i'
       - run: 'ls'
       - run: 'npm start'

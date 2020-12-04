@@ -7,6 +7,7 @@ jobs:
         #   username: apolonskyi
         #   password: Passw0rd!
     steps:
+      - run: 'exit'
       - checkout
       - run: 'ls'
       - run: './postgres-db.sh'

@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  start:
+  build:
     docker: 
       - image: node:12.13.1
     steps:

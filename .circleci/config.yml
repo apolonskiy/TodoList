@@ -1,22 +1,12 @@
 version: 2.1
 jobs:
-  build:
-    docker:
-      - image: postgres:11.1
-        # auth:
-        #   username: apolonskyi
-        #   password: Passw0rd!
-    steps:
-      - run: 'exit'
-      - checkout
-      - run: 'ls'
-      - run: './postgres-db.sh'
-
   start:
     docker: 
       - image: node:12.13.1
-
     steps:
+      - checkout
+      - run: 'ls'
+      - run: './postgres-db.sh'
       - run: 'npm i'
       - run: 'npm start'
 

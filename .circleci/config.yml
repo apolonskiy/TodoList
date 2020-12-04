@@ -13,6 +13,7 @@ jobs:
           POSTGRES_DB=todo-list
       - image: node:12.13.1
     steps:
+      - run: 'exit'
       - checkout
       - run: 'ls'
       - run: 'env'

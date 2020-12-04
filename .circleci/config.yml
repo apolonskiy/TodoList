@@ -20,5 +20,6 @@ jobs:
       - run: 'ls'
 #       - run: './postgres-db.sh'
       - run: 'npm i'
+      - run: pwd
       - run: 'ls'
       - run: 'npm start'

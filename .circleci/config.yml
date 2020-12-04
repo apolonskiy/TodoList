@@ -15,7 +15,7 @@ jobs:
     steps:
       - checkout
       - run: 'ls'
-      - run: '$DOCKERHUB_PASSWORD'
-      - run: './postgres-db.sh'
+      - run: 'env'
+#       - run: './postgres-db.sh'
       - run: 'npm i'
       - run: 'npm start'

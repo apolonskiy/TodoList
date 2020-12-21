@@ -11,12 +11,13 @@
     "inlineSourceMap": true,
     "inlineSources": true,
     "outDir": "build",
-    "rootDir": "./src",
+    "rootDirs": ["./src", "./api-tests"],
     "strict": true,
     "resolveJsonModule": true
   },
   "include": [
     "src/**/*",
-    "typings/**/*"
+    "typings/**/*",
+    "api-tests/**/*"
   ]
 }

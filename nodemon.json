@@ -1,0 +1,4 @@
+{
+  "watch": ["src", "migrations"],
+  "ext": "js, ts, json, sql"
+}

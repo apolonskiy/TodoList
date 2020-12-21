@@ -7,4 +7,6 @@ export const client = new Client({
   password: 'Passw0rd!',
   port: 5454
 });
-client.connect();
+client.connect().catch(err => {
+  throw new Error(err.stack);
+});

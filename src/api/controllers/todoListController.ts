@@ -2,80 +2,94 @@ import {
   handleCreateUpdateErrors,
   handleNoIdOrNameSpecified,
   handleNotExistingTodoId,
+  handleNoTodNameSpecified,
   handleNoTodoIdSpecified
 } from '../error-handlers/controllerErrorHandlers';
 
-import { client as dbClient } from '../../db-client-utils/db-client';
+export interface ITodo {
+  todo_list_id: string;
+  todo_name: string;
+}
 
-export const getAllTodoLists = async () => {
-  try {
-    const res = await dbClient.query('SELECT * FROM tdl.todo_list');
-    console.log(typeof res.rows);
-    return res.rows;
-  } catch (e) {
-    throw e;
-  }
-};
+export class TodoListController {
+  private dbClient: any;
 
-export const createTodoList = async (todoName: string) => {
-  if (!todoName) {
-    throw new Error(handleNoTodoIdSpecified());
+  constructor(dbClient: any) {
+    this.dbClient = dbClient;
   }
-  try {
-    const res = await dbClient.query(
-      `INSERT INTO tdl.todo_list (todo_name) VALUES ('${todoName}') RETURNING todo_list_id,todo_name`
-    );
-    return res.rows[0];
-  } catch (e) {
-    handleCreateUpdateErrors(e.stack, [todoName]);
-    throw e;
-  }
-};
 
-export const updateTodoList = async (todoId: string, newTodoName: string) => {
-  if (!(newTodoName && todoId)) {
-    throw new Error(handleNoIdOrNameSpecified());
-  }
-  try {
-    const res = await dbClient.query(
-      `UPDATE tdl.todo_list SET todo_name='${newTodoName}' WHERE todo_list_id='${todoId}' RETURNING todo_name, todo_list_id`
-    );
-    if (!res.rowCount) {
-      throw new Error(handleNotExistingTodoId(todoId));
+  async getAllTodoLists(pagination = 10): Promise<ITodo[]> {
+    try {
+      const res = await this.dbClient.query(
+        `SELECT * FROM tdl.todo_list LIMIT ${pagination}`
+      );
+      return res.rows;
+    } catch (e) {
+      throw e;
     }
-    return res.rows[0];
-  } catch (e) {
-    handleCreateUpdateErrors(e.stack, [newTodoName, todoId]);
-    throw e;
   }
-};
 
-export const getTodoList = async (todoId: string) => {
-  if (!todoId) {
-    throw new Error(handleNoTodoIdSpecified());
+  async createTodoList(todoName: string): Promise<ITodo> {
+    try {
+      const res = await this.dbClient.query(
+        `INSERT INTO tdl.todo_list (todo_name) VALUES ('${todoName.trim()}') RETURNING todo_list_id,todo_name`
+      );
+      return res.rows[0];
+    } catch (e) {
+      handleCreateUpdateErrors(e.stack, [todoName]);
+      throw e;
+    }
   }
-  try {
-    const res = await dbClient.query(
-      `SELECT * FROM tdl.todo_list WHERE todo_list_id='${todoId}'`
-    );
-    return res.rows[0];
-  } catch (e) {
-    throw e;
-  }
-};
 
-export const deleteTodoList = async (todoIds: string[]) => {
-  if (todoIds.length < 1) {
-    throw new Error(handleNoTodoIdSpecified());
+  async updateTodoList(todoId: string, newTodoName: string): Promise<ITodo> {
+    if (!(newTodoName && todoId)) {
+      throw new Error(handleNoIdOrNameSpecified());
+    }
+    try {
+      const res = await this.dbClient.query(
+        `UPDATE tdl.todo_list SET todo_name='${newTodoName}' WHERE todo_list_id='${todoId}' RETURNING todo_name, todo_list_id`
+      );
+      if (!res.rowCount) {
+        throw new Error(handleNotExistingTodoId(todoId));
+      }
+      return res.rows[0];
+    } catch (e) {
+      handleCreateUpdateErrors(e.stack, [newTodoName, todoId]);
+      throw e;
+    }
   }
-  try {
-    const res = await dbClient.query(
-      `DELETE FROM tdl.todo_list WHERE todo_list_id IN (${todoIds
-        .map(v => `'${v}'`)
-        .join(',')})`
-    );
-    return res.rowCount;
-  } catch (e) {
-    throw e;
+
+  async getTodoList(todoId: string): Promise<ITodo> {
+    if (!todoId) {
+      throw new Error(handleNoTodoIdSpecified());
+    }
+    try {
+      const res = await this.dbClient.query(
+        `SELECT * FROM tdl.todo_list WHERE todo_list_id='${todoId}'`
+      );
+      if (!res.rows.length) {
+        throw new Error('No TodoList Found.');
+      }
+      return res.rows[0];
+    } catch (e) {
+      handleCreateUpdateErrors(e.stack, ['', todoId]);
+      throw e;
+    }
   }
-};
+
+  async deleteTodoList(todoIds: string[]): Promise<number> {
+    if (todoIds.length < 1) {
+      throw new Error(handleNoTodoIdSpecified());
+    }
+    try {
+      const res = await this.dbClient.query(
+        `DELETE FROM tdl.todo_list WHERE todo_list_id IN (${todoIds
+          .map(v => `'${v}'`)
+          .join(',')})`
+      );
+      return res.rowCount;
+    } catch (e) {
+      throw e;
+    }
+  }
+}
